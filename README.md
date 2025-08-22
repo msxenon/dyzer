@@ -92,7 +92,7 @@ Dyzer can be used as a plugin for the Dart `analyzer` [package](https://pub.dev/
 
 Rules that marked with 🛠 have auto-fixes available through the IDE context menu. VS Code example:
 
-![VS Code example](https://github.com/msxenon/dyzer/blob/main/media/assets/quick-fixes.png)
+![VS Code example](https://github.com/msxenon/dyzer/blob/main/media/quick-fixes.png)
 
 
 ### CLI
