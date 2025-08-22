@@ -108,11 +108,11 @@ const config = {
               },
               {
                 label: 'Contributing',
-                href: 'https://github.com/msxenon/dyzer/blob/main/packages/dyzer/CONTRIBUTING.md',
+                href: 'https://github.com/msxenon/dyzer/blob/main/CONTRIBUTING.md',
               },
               {
                 label: 'Troubleshooting',
-                href: 'https://github.com/msxenon/dyzer/blob/main/packages/dyzer/TROUBLESHOOTING.md',
+                href: 'https://github.com/msxenon/dyzer/blob/main/TROUBLESHOOTING.md',
               },
             ],
           },
