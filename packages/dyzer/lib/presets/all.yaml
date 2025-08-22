@@ -1,0 +1,4 @@
+dyzer:
+  extends:
+    - ./dart_all.yaml
+    - ./flutter_all.yaml

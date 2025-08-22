@@ -1,0 +1,15 @@
+# https://dart.dev/guides/libraries/private-files
+# Created by `dart pub`
+.dart_tool/
+
+# Flutter/Dart Plugin
+.idea/
+
+# FVM Version Cache
+.fvm/
+.idea/**
+*.lock
+*.iml
+das_logs**
+**/logs/**
+pubspec_overrides.yaml

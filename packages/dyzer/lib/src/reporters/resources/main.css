@@ -1,0 +1,306 @@
+a {
+  text-decoration: none;
+  color: var(--dyzer-link-default-color);
+}
+
+a:hover {
+  opacity: .7;
+}
+
+.metric-header {
+  margin-bottom: var(--dyzer-margin-top);
+  font-size: 18px;
+}
+
+.metric-sub-header {
+  display: grid;
+  grid-gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.metric-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.metrics-total-table {
+  width: var(--dyzer-total-table-width);
+  border-top: var(--dyzer-border-width) solid var(--dyzer-total-table-border-color);
+  border-left: var(--dyzer-border-width) solid var(--dyzer-total-table-border-color);
+}
+
+.metrics-total-table th,
+.metrics-total-table td {
+  padding: var(--dyzer-common-padding);
+  border-right: var(--dyzer-border-width) solid var(--dyzer-total-table-border-color);
+}
+
+.metrics-total-table td {
+  border-bottom: var(--dyzer-border-width) solid var(--dyzer-total-table-border-color);
+}
+
+.metrics-total-table th {
+  border-bottom: 2px solid var(--dyzer-total-table-border-color);
+}
+
+.metrics-total-table tr th:first-child,
+.metrics-total-table tr td:first-child {
+  text-align: left;
+  min-width: var(--dyzer-total-table-cell-width);
+}
+
+.metrics-total-table tr td {
+  word-break: break-all;
+}
+
+.metrics-total-table tr th:not(:first-child) {
+  width: var(--dyzer-total-table-cell-width);
+}
+
+.metrics-total-table tr td:not(:first-child) {
+  text-align: center;
+}
+
+.metrics-totals {
+  width: var(--dyzer-totals-width);
+}
+
+.metrics-totals .metrics-total + .metrics-total {
+  margin-top: 8px;
+}
+
+.metrics-total {
+  padding: var(--dyzer-common-padding) 12px;
+  background-color: var(--dyzer-total-bg-color);
+}
+
+.metrics-total--violations,
+.with-violations {
+  background-color: var(--dyzer-violations-bg-color);
+}
+
+.metrics-total__count {
+  font-weight: bold;
+}
+
+.metrics-source-code {
+  margin-top: var(--dyzer-margin-top);
+  border: var(--dyzer-border-width) solid var(--dyzer-source-code-border-color);
+}
+
+.metrics-source-code__header td {
+  padding: var(--dyzer-common-padding);
+  font-family: var(--dyzer-font-family);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: .083em;
+  text-transform: uppercase;
+  border-bottom: var(--dyzer-border-width) solid var(--dyzer-source-code-border-color);
+}
+
+.metrics-source-code__number-lines {
+  width: var(--dyzer-source-code-number-lines-width);
+  border-right: var(--dyzer-border-width) solid var(--dyzer-source-code-border-color);
+  text-align: right
+}
+
+.metrics-source-code__number {
+  padding: 0 4px;
+  text-decoration: none;
+  color: var(--dyzer-link-default-color);
+  line-height: var(--dyzer-source-code-text-height);
+}
+
+.metrics-source-code__number:hover {
+  color: var(--dyzer-link-default-color-hover);
+}
+
+.metrics-source-code__number:focus-within {
+  background-color: var(--dyzer-link-default-color);
+  color: var(--dyzer-link-default-color-focus-within);
+}
+
+.metrics-source-code__body .metrics-source-code__number-lines {
+  padding: var(--dyzer-common-padding) 4px;
+}
+
+.metrics-source-code__complexity {
+  width: var(--dyzer-source-code-complexity-width);
+  padding: var(--dyzer-common-padding) 0;
+  border-right: var(--dyzer-border-width) solid var(--dyzer-source-code-border-color);
+}
+
+pre.prettyprint.prettyprint {
+  border: 0;
+  padding: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.metrics-source-code__text {
+  height: var(--dyzer-source-code-text-height);
+  padding: 0 var(--dyzer-common-padding);
+  line-height: var(--dyzer-source-code-text-height);
+}
+
+.metrics-source-code__text::after {
+  content: "";
+  position: absolute;
+  left: var(--dyzer-source-code-text-after-left);
+  width: var(--dyzer-source-code-text-after-width);
+  height: var(--dyzer-source-code-text-height);
+  background-color: inherit;
+  z-index: -1;
+}
+
+.metrics-source-code__text--with-icon {
+  display: flex;
+  align-items: center;
+}
+
+.metrics-source-code__icon {
+  position: relative; /* for .metrics-source-code__tooltip */
+  width: var(--dyzer-source-code-icon-size);
+  height: var(--dyzer-source-code-icon-size);
+}
+
+.metrics-source-code__icon--issue {
+  margin-left: auto;
+}
+
+.metrics-source-code__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.metrics-source-code__tooltip {
+  position: absolute; /* containing block: .metrics-source-code__icon */
+  left: 0;
+  bottom: var(--dyzer-source-code-tooltip-bottom);
+  min-width: var(--dyzer-source-code-tooltip-width);
+  padding:
+    calc(var(--dyzer-source-code-tooltip-padding) / 2)
+    var(--dyzer-source-code-tooltip-padding);
+  border-radius: 2px;
+  font-size: 12px;
+  font-family: var(--dyzer-font-family);
+  background-color: var(--dyzer-source-code-tooltip-bg-color);
+  box-shadow:
+    0 2px 8px 0 var(--dyzer-source-code-tooltip-shadow-color),
+    0 0 1px 0 var(--dyzer-source-code-tooltip-shadow-color);
+  transition:
+    transform var(--dyzer-source-code-tooltip-transition-duration),
+    opacity var(--dyzer-source-code-tooltip-transition-duration),
+    visibility var(--dyzer-source-code-tooltip-transition-duration);
+  transform: translate(0, var(--dyzer-source-code-tooltip-arrow-size));
+  visibility: hidden;
+  opacity: 0;
+  z-index: -1;
+}
+
+.metrics-source-code__tooltip::after {
+  content: "";
+  position: absolute;
+  left: var(--dyzer-source-code-tooltip-arrow-left);
+  bottom: var(--dyzer-source-code-tooltip-arrow-bottom);
+  display: block;
+  width: var(--dyzer-source-code-tooltip-arrow-size);
+  height: var(--dyzer-source-code-tooltip-arrow-size);
+  background-color: var(--dyzer-source-code-tooltip-bg-color);
+  transform: rotate(45deg);
+  z-index: calc(var(--dyzer-source-code-tooltip-z-index) - 1);
+}
+
+.metrics-source-code__icon:hover .metrics-source-code__tooltip {
+  transform: translate(0, 0);
+  visibility: visible;
+  opacity: 1;
+  z-index: var(--dyzer-source-code-tooltip-z-index);
+}
+
+.metrics-source-code__tooltip-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.metrics-source-code__tooltip-section {
+  margin-top: 8px;
+}
+
+.metrics-source-code__tooltip-level--alarm {
+  color: rgba(var(--dyzer-source-code-color-attention-complexity), 1);
+}
+
+.metrics-source-code__tooltip-level--warning {
+  color: rgba(var(--dyzer-source-code-color-warning-complexity), 1);
+}
+
+.metrics-source-code__tooltip-level--noted {
+  color: rgba(var(--dyzer-source-code-color-noted-complexity), 1);
+}
+
+.metrics-source-code__tooltip-level--none {
+  color: rgba(var(--dyzer-source-code-color-normal-complexity), 1);
+}
+
+.metrics-source-code__code {
+  position: relative;
+  padding: var(--dyzer-common-padding);
+  line-height: var(--dyzer-source-code-text-height);
+}
+
+.metrics-source-code__line--normal-complexity {
+  background-color: rgba(
+    var(--dyzer-source-code-color-normal-complexity),
+    var(--dyzer-source-code-line-bg-color-alpha)
+  );
+}
+
+.metrics-source-code__line--noted-complexity {
+  background-color: rgba(
+    var(--dyzer-source-code-color-noted-complexity),
+    var(--dyzer-source-code-line-bg-color-alpha)
+  );
+}
+
+.metrics-source-code__line--warning-complexity {
+  background-color: rgba(
+    var(--dyzer-source-code-color-warning-complexity),
+    var(--dyzer-source-code-line-bg-color-alpha)
+  );
+}
+
+.metrics-source-code__line--attention-complexity {
+  background-color: rgba(
+    var(--dyzer-source-code-color-attention-complexity),
+    var(--dyzer-source-code-line-bg-color-alpha)
+  );
+}
+
+.metrics-source-code__text--normal-complexity {
+  background-color: rgba(
+    var(--dyzer-source-code-color-normal-complexity),
+    var(--dyzer-source-code-text-bg-color-alpha)
+  );
+}
+
+.metrics-source-code__text--noted-complexity {
+  background-color: rgba(
+    var(--dyzer-source-code-color-noted-complexity),
+    var(--dyzer-source-code-text-bg-color-alpha)
+  );
+}
+
+.metrics-source-code__text--warning-complexity {
+  background-color: rgba(
+    var(--dyzer-source-code-color-warning-complexity),
+    var(--dyzer-source-code-text-bg-color-alpha)
+  );
+}
+
+.metrics-source-code__text--attention-complexity {
+  background-color: rgba(
+    var(--dyzer-source-code-color-attention-complexity),
+    var(--dyzer-source-code-text-bg-color-alpha)
+  );
+}

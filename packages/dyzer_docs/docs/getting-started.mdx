@@ -1,0 +1,57 @@
+---
+sidebar_position: 1
+title: Getting Started
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Getting Started with Dyzer
+
+
+Dart code Linter - Dyzer is a tool that helps improve the quality and consistency of Dart code by identifying and reporting problems, such as bugs and code that doesn't follow best practices. It also collects analytical data on the code through calculating code metrics and can be configured to set thresholds for these metrics.
+
+## Installation
+Installation
+To use Dyzer, add it as a dev dependency to your project:
+
+<Tabs>
+  <TabItem value="dart" label="Dart" default>
+
+```sh
+ dart pub add --dev dyzer
+```
+
+</TabItem>
+  <TabItem value="flutter" label="Flutter">
+
+```sh
+flutter pub add --dev dyzer
+```
+
+</TabItem>
+
+</Tabs>
+
+
+
+## Usage
+### CLI
+
+You can run Dyzer analysis from the console using the following command:
+
+```sh
+dart  run dyzer analyze lib 
+```
+
+Dyzer also provides other commands such as check-unused-code and check-unused-files that can help you maintain the codebase. For more information on using Dyzer as a command-line tool, see the Command Line Interface documentation.
+### Analyzer plugin
+
+Dyzer can be used as a plugin for the Dart analyzer, providing instant feedback on found issues directly in your integrated development environment (IDE). For more information on using Dyzer as an analyzer plugin, see the Analyzer Plugin documentation.
+### Library (additional option)
+
+You can use Dyzer as a library directly in your code. See this example for more information. This might be useful if you have a separate package for linting config and want to run Dyzer from that package's executable.
+## Next Steps
+
+- Learn about the [configuration options](/docs/configuration/) for customizing Dyzer's behavior.
+- Get familiar with the [Command Line Interface](/docs/cli/) for running Dyzer from the console.
+- Test existing [presets](/docs/configuration/presets)

@@ -1,0 +1,28 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  padding: var(--dyzer-body-padding);
+  font-family: var(--dyzer-font-family);
+  font-size: var(--dyzer-body-font-size);
+}
+
+table {
+  width: 100%;
+  margin: 0;
+  border-spacing: 0;
+  font-size: inherit;
+  table-layout: fixed;
+}
+
+table td {
+  vertical-align: top;
+}
+
+pre,
+code {
+  margin: 0;
+}

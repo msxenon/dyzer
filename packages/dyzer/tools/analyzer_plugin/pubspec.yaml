@@ -1,0 +1,15 @@
+name: dyzer_plugin_loader
+description: This pubspec determines the version of the analyzer plugin to load.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ">=2.14.0 <3.0.0"
+
+dependencies:
+  dyzer: ^0.0.1
+dev_dependencies:
+  lints: ^1.0.1
+
+# If you want to contribute to dyzer, add a pubspec_overrides.yaml file
+# in this folder, by running "sh scripts/dev_ws_setup.sh"

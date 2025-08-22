@@ -1,0 +1,13 @@
+{
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "version": "1.0.0",
+    "baselinedIssues": 0,
+    "baselinedFiles": 1,
+    "files": {
+        "/suppression_example.dart": {
+            "rule_id4": [
+                "58a40258f173f22a1589bacb1edde6eb"
+            ]
+        }
+    }
+}

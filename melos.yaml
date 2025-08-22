@@ -1,0 +1,32 @@
+name: dyzer_project
+command:
+  bootstrap:
+    hooks:
+      pre: find . -name "pubspec.lock" -delete
+
+sdkPath: .fvm/flutter_sdk
+
+packages:
+  - "packages/*"
+ 
+scripts:
+  generate:
+    run: melos exec -c 1 --depends-on build_runner -- dart run build_runner build --delete-conflicting-outputs
+
+  create_baselines:
+    run: melos exec -c 1 --depends-on dyzer -- dart run dyzer baseline --verbose *
+
+  reset_analyzer_plugin:
+    run: killall dart && rm -rf ~/.dartServer/.plugin_manager
+
+  format:
+    run: melos exec -c 1 -- dart format .
+  
+  test:
+    run: melos exec -c 1 --depends-on test -- dart test --fail-fast --test-randomize-ordering-seed random
+  
+  analyze_dyzer:
+    run: melos exec -c 1 --depends-on dyzer -- dart run dyzer analyze --verbose *
+
+  analyzer_dart:
+    run: melos exec -c 1 -- dart analyze .

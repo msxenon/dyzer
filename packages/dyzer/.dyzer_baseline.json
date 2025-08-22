@@ -1,0 +1,170 @@
+{
+  "createdAt": "2025-08-20T18:07:49.652488",
+  "baselinedIssues": 46,
+  "baselinedFiles": 24,
+  "version": "1.0.0",
+  "files": {
+    "/lib/src/analyzer_plugin/analyzer_plugin.dart": {
+      "newline-before-return": [
+        "b29ae52d28276068059e941b32ce1038"
+      ],
+      "prefer-correct-identifier-length": [
+        "a9e26254e651465c89ff715d5733e97c"
+      ],
+      "prefer-trailing-comma": [
+        "84974f25dd295c0e5f1354de50e07a78",
+        "af160e11707294beaa12f2f3d08b8684",
+        "fdf2d1530c824df727fa581e2dd21442"
+      ]
+    },
+    "/lib/src/analyzers/lint_analyzer/lint_analyzer.dart": {
+      "long-parameter-list": [
+        "430693d7585bc22afc89a4665f0e3cfd"
+      ],
+      "prefer-trailing-comma": [
+        "4160327ea27b09c82046edcc511bb303",
+        "4997c3c4dbeeeb41deba2f2074710872",
+        "02dda8b322cc9afc1d17ae05d54dd065"
+      ]
+    },
+    "/lib/src/analyzers/lint_analyzer/reporters/reporters_list/html/lint_html_reporter.dart": {
+      "long-method": [
+        "3a74c4c29330cf30adf80b85531323ec",
+        "adcae2e9474c06834c292d518a998fda"
+      ]
+    },
+    "/lib/src/analyzers/lint_analyzer/reporters/reporters_list/html/utility_functions.dart": {
+      "long-method": [
+        "eac357a04a37c4ace0826d78a28b18ab"
+      ]
+    },
+    "/lib/src/analyzers/lint_analyzer/reporters/utility_selector.dart": {
+      "long-method": [
+        "6b92a1fc7845ec533377416077e6b7b2"
+      ]
+    },
+    "/lib/src/analyzers/lint_analyzer/rules/rule_utils.dart": {
+      "long-parameter-list": [
+        "8011693ae42db1b003f88dd35fd4f42f"
+      ]
+    },
+    "/lib/src/analyzers/lint_analyzer/rules/rules_list/prefer_first_or_null/visitor.dart": {
+      "prefer-moving-to-variable": [
+        "c0bf22181636a32fc1270b7a83f53742"
+      ]
+    },
+    "/lib/src/analyzers/lint_analyzer/rules/rules_list/prefer_single_quotes/prefer_single_qoutes.dart": {
+      "prefer-match-file-name": [
+        "21afc4ab4b3f27de117012f89b2d383c"
+      ]
+    },
+    "/lib/src/analyzers/lint_analyzer/utils/report_utils.dart": {
+      "prefer-trailing-comma": [
+        "2fa857774ca1eb79df664dda578fd61f"
+      ]
+    },
+    "/lib/src/analyzers/unnecessary_nullable_analyzer/unnecessary_nullable_analyzer.dart": {
+      "prefer-trailing-comma": [
+        "4160327ea27b09c82046edcc511bb303"
+      ]
+    },
+    "/lib/src/analyzers/unused_code_analyzer/unused_code_analyzer.dart": {
+      "prefer-trailing-comma": [
+        "4160327ea27b09c82046edcc511bb303"
+      ]
+    },
+    "/lib/src/analyzers/unused_files_analyzer/unused_files_analyzer.dart": {
+      "prefer-trailing-comma": [
+        "4160327ea27b09c82046edcc511bb303"
+      ]
+    },
+    "/lib/src/analyzers/unused_l10n_analyzer/unused_l10n_analyzer.dart": {
+      "prefer-trailing-comma": [
+        "4160327ea27b09c82046edcc511bb303"
+      ]
+    },
+    "/lib/src/cli/cli_runner.dart": {
+      "prefer-trailing-comma": [
+        "eb1d59373157c71f211872ab7c14a171"
+      ]
+    },
+    "/lib/src/cli/commands/analyze_command.dart": {
+      "avoid-late-keyword": [
+        "02c15996c26a2421e58020439aeca555"
+      ]
+    },
+    "/lib/src/cli/commands/baseline_command.dart": {
+      "long-method": [
+        "cff4c592d89abd6a42405801943d0765"
+      ],
+      "prefer-trailing-comma": [
+        "83f9a3ac525ad7504ca5d6a3b17648bb",
+        "86ca515dfa549e6c5b4568667e429a29"
+      ]
+    },
+    "/lib/src/cli/commands/fix_lints_command.dart": {
+      "avoid-late-keyword": [
+        "02c15996c26a2421e58020439aeca555"
+      ]
+    },
+    "/lib/src/logger/dyzer_pretty_printer.dart": {
+      "avoid-late-keyword": [
+        "662becfbcbe8b886113ccff9fed6b5e0"
+      ],
+      "avoid-missing-enum-constant-in-map": [
+        "fb63287946c7f9e20f3de2257343fb54",
+        "428b6a53561696adb7c5a8674a63e0ad"
+      ],
+      "avoid-unused-parameters": [
+        "b7f9d70f686bc70b12680726bfc89d88"
+      ],
+      "newline-before-return": [
+        "9cf762c32e9958c7e59df190d793381a",
+        "a8f7106cc1b2967fac73cc3b88b522d2",
+        "dbec3c166046e10d457a0382bcc584d1",
+        "eac609a871a8a0a892c5726c0102134a",
+        "d8aaa4646c7874e09c9a08244cb7a20d"
+      ],
+      "prefer-conditional-expressions": [
+        "fd5df4567f9cda8cac9d046298bf79de"
+      ],
+      "prefer-correct-identifier-length": [
+        "a9e26254e651465c89ff715d5733e97c"
+      ]
+    },
+    "/lib/src/logger/logger.dart": {
+      "newline-before-return": [
+        "4944ad7ad7331a34b1effd0e1dbb5484"
+      ],
+      "prefer-trailing-comma": [
+        "0f3bdcde5aedbee74b7c7df186ce4294",
+        "ec086f2bed8060603f32cb9930c9c8fa"
+      ]
+    },
+    "/lib/src/providers/baseline_model_reader.dart": {
+      "prefer-match-file-name": [
+        "110e096cfae7ab1a8f874878c40584e0"
+      ]
+    },
+    "/lib/src/utils/environment_utils.dart": {
+      "avoid-global-state": [
+        "30f023db5e5a2e179371358c6cb177fe"
+      ]
+    },
+    "/lib/src/utils/suppression.dart": {
+      "prefer-correct-identifier-length": [
+        "e50eb7598b580311bab8f39bb8f4815b"
+      ]
+    },
+    "/test/src/analyzers/lint_analyzer/rules/rules_list/no_blank_line_before_single_return/no_blank_line_before_single_return_rule_test.dart": {
+      "prefer-trailing-comma": [
+        "370bc2c8fd88949fceea0bbb19c42adf"
+      ]
+    },
+    "/test/src/cli/commands/fix_command_test.dart": {
+      "prefer-trailing-comma": [
+        "8a7172617a86b163a3aba0863aa41cb6"
+      ]
+    }
+  }
+}
