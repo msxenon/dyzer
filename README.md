@@ -1,6 +1,8 @@
 # ✨ Dyzer:
 [![Pub](https://img.shields.io/pub/v/dyzer.svg)](https://pub.dev/packages/dyzer)
 
+*Note: this repo is forked from [Dart Code Metrics](https://github.com/dart-code-checker/dart-code-metrics)
+
 ## The Baseline-Aware Dart Analyzer Plugin
 
 Dyzer is a powerful Dart plugin designed to streamline your development workflow by providing early baseline-aware support for key features. Our goal is to help you build modern, performant, and future-proof Dart applications with confidence.
