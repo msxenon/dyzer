@@ -1,7 +1,8 @@
 name: dyzer
-version: 0.0.1
+version: 1.0.0
 description: Dyzer is a software analytics tool that helps developers analyse and improve software quality. Dyzer is based on a fork of Dart Code Metrics.
 repository: https://github.com/msxenon/dyzer
+publish_to: none
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
