@@ -117,7 +117,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Dyzer project`,
+        copyright: `This project was forked from <a href="https://github.com/dart-code-checker/dart-code-metrics">Dart Code Metrics</a>`,
       },
       prism: {
         theme: prismThemes.github,
