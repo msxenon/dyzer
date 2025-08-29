@@ -1,9 +1,11 @@
 import 'dart:collection';
 
+import 'package:equatable/equatable.dart';
+
 import '../../../lint_analyzer.dart';
 import 'ignored_issue_model.dart';
 
-class LintFileModel {
+class LintFileModel with EquatableMixin {
   // The key is the path to the file being linted.
   final Map<String, Set<IgnoredIssueModel>> lints;
   const LintFileModel({required this.lints});
@@ -47,4 +49,7 @@ class LintFileModel {
         key,
         value.map((item) => item.toJson()).toList(),
       ));
+
+  @override
+  List<Object?> get props => [lints];
 }

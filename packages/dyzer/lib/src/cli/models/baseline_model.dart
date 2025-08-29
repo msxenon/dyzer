@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
+
 import 'lint_file_model.dart';
 
-class BaselineModel {
+class BaselineModel with EquatableMixin {
   final Map<String, LintFileModel> files;
   final DateTime createdAt;
   final String version;
@@ -48,4 +50,13 @@ class BaselineModel {
         baselinedIssues: baselinedIssues ?? this.baselinedIssues,
         baselinedFiles: baselinedFiles ?? this.baselinedFiles,
       );
+
+  @override
+  List<Object?> get props => [
+        files,
+        createdAt,
+        version,
+        baselinedIssues,
+        baselinedFiles,
+      ];
 }

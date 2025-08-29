@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 
 import '../../cli_runner.dart';
@@ -9,28 +10,33 @@ import '../cli/models/baseline_model.dart';
 
 class BaselineReaderProvider {
   static bool _isInProcess = false;
-  static BaselineModel? _instance;
-  static String _rootFolder = '';
+  @visibleForTesting
+  static final Map<String, BaselineModel> rootFolderAndBaselineMap = {};
 
   BaselineModel? call(String rootFolder, {bool force = false}) {
     try {
       if (_isInProcess) {
         return null;
       }
-      if (_instance != null && _rootFolder == rootFolder && !force) {
-        return _instance;
+      if (!force && rootFolderAndBaselineMap.keys.contains(rootFolder)) {
+        return rootFolderAndBaselineMap[rootFolder];
       }
-      _rootFolder = rootFolder;
 
-      final jsonString = readAsString(rootFolder);
+      final jsonString = _readAsString(rootFolder);
       if (jsonString == null) {
+        rootFolderAndBaselineMap.remove(rootFolder);
+
         return null;
       }
       final jsonMap = json.decode(jsonString);
-
+      Logger(tag: '$BaselineModel').info(
+        'Reading baseline from: $rootFolder, $force',
+      );
       final baseline = BaselineModel.fromMap(jsonMap as Map<String, dynamic>);
 
-      return _instance = baseline;
+      rootFolderAndBaselineMap[rootFolder] = baseline;
+
+      return baseline;
       // ignore: avoid_catches_without_on_clauses
     } catch (e, s) {
       Logger(tag: '$BaselineModel').e(e, s);
@@ -39,13 +45,11 @@ class BaselineReaderProvider {
     return null;
   }
 
-  String? readAsString(String rootFolder) {
+  String? _readAsString(String rootFolder) {
     final jsonFile = File(join(rootFolder, BaselineCommand.baselineFileName));
     if (!jsonFile.existsSync()) {
       return null;
     }
-    Logger(tag: '$BaselineModel')
-        .info('Reading baseline from: ${jsonFile.path}');
 
     return jsonFile.readAsStringSync();
   }
@@ -56,23 +60,10 @@ class BaselineReaderProvider {
 
   // ignore: use_setters_to_change_properties
   void assignInstance(BaselineModel instance, String rootFolder) {
-    _instance = instance;
-    _rootFolder = rootFolder;
+    rootFolderAndBaselineMap[rootFolder] = instance;
   }
 
   void resume() {
     _isInProcess = false;
-  }
-
-  /// Cleanup method to prevent static memory leaks
-  static void cleanup() {
-    _instance = null;
-    _rootFolder = '';
-  }
-
-  /// Switch to a new project and cleanup old data
-  void switchProject(String newRootFolder) {
-    cleanup();
-    _rootFolder = newRootFolder;
   }
 }

@@ -29,38 +29,94 @@ void main() {
         'baselinedFiles': 2,
       };
 
-      final baselineModelMapped = BaselineModel.fromMap(baselineV1Data).toMap();
-      expect(baselineModelMapped, baselineV1Data);
+      final baselineModelMapped = BaselineModel.fromMap(baselineV1Data);
+      expect(baselineModelMapped.toMap(), baselineV1Data);
       expect(
         baselineModelMapped,
         BaselineModel(
-          files: SplayTreeMap.from({
-            'lib/first_path.dart': LintFileModel(
-              lints: SplayTreeMap.from({
-                'first_lint': {
-                  const IgnoredIssueModel('first_path_first_lint_hash_4'),
-                  const IgnoredIssueModel('first_path_first_lint_hash_5'),
-                },
-              }),
-            ),
-            'lib/second_path.dart': LintFileModel(
-              lints: SplayTreeMap.from({
-                'first_lint': {
-                  const IgnoredIssueModel('second_path_first_lint_hash_3'),
-                },
-                'second_lint': {
-                  const IgnoredIssueModel('second_path_second_lint_hash_1'),
-                  const IgnoredIssueModel('second_path_second_lint_hash_2'),
-                },
-              }),
-            ),
-          }),
+          files: {
+            'lib/first_path.dart': LintFileModel(lints: {
+              'first_lint': {
+                const IgnoredIssueModel('first_path_first_lint_hash_4'),
+                const IgnoredIssueModel('first_path_first_lint_hash_5'),
+              },
+            }),
+            'lib/second_path.dart': LintFileModel(lints: {
+              'first_lint': {
+                const IgnoredIssueModel('second_path_first_lint_hash_3'),
+              },
+              'second_lint': {
+                const IgnoredIssueModel('second_path_second_lint_hash_1'),
+                const IgnoredIssueModel('second_path_second_lint_hash_2'),
+              },
+            }),
+          },
           createdAt: DateTime.parse('2025-08-11T14:51:39.850445Z'),
           version: '1',
           baselinedFiles: 2,
           baselinedIssues: 5,
-        ).toMap(),
+        ),
       );
+    });
+
+    test('should not equal', () {
+      final model1 = BaselineModel(
+        files: SplayTreeMap.from({
+          'lib/first_path.dart': LintFileModel(
+            lints: SplayTreeMap.from({
+              'first_lint': {
+                const IgnoredIssueModel('first_path_first_lint_hash_4'),
+                const IgnoredIssueModel('first_path_first_lint_hash_5'),
+              },
+            }),
+          ),
+          'lib/second_path.dart': LintFileModel(
+            lints: {
+              'first_lint': {
+                const IgnoredIssueModel('second_path_first_lint_hash_3'),
+              },
+              'second_lint': {
+                const IgnoredIssueModel('second_path_second_lint_hash_1'),
+                const IgnoredIssueModel('second_path_second_lint_hash_2'),
+              },
+            },
+          ),
+        }),
+        createdAt: DateTime.parse('2025-08-11T14:51:39.850445Z'),
+        version: '1',
+        baselinedFiles: 2,
+        baselinedIssues: 5,
+      );
+
+      final model2 = BaselineModel(
+        files: {
+          'lib/first_path.dart': LintFileModel(
+            lints: {
+              'first_lint': {
+                const IgnoredIssueModel('first_path_first_lint_hash_4'),
+                const IgnoredIssueModel('first_path_first_lint_hash_5'),
+              },
+            },
+          ),
+          'lib/second_path.dart': LintFileModel(
+            lints: {
+              'first_lint': {
+                const IgnoredIssueModel('second_path_first_lint_hash_3'),
+              },
+              'second_lint': {
+                const IgnoredIssueModel('second_path_second_lint_hash_1'),
+                const IgnoredIssueModel('second_path_second_lint_hash_22'), // Different hash to ensure inequality
+              },
+            },
+          ),
+        },
+        createdAt: DateTime.parse('2025-08-11T14:51:39.850445Z'),
+        version: '1',
+        baselinedFiles: 2,
+        baselinedIssues: 5,
+      );
+
+      expect(model1, isNot(equals(model2)));
     });
   });
 }

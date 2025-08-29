@@ -1,3 +1,7 @@
+## 1.0.3
+
+- Fix baseline model equality issue.
+
 ## 1.0.2
 
 - Update dependencies
