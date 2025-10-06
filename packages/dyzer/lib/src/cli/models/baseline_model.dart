@@ -62,10 +62,22 @@ class BaselineModel with EquatableMixin {
       ];
 
   static String normalizeBaselinePath(String path) {
-    // Convert it into a POSIX path
-    final normalizedPath = p.Context(style: p.Style.posix).joinAll(
-      p.Context(style: p.Style.windows).split(path),
-    );
+    final windowsContext = p.Context(style: p.Style.windows);
+    final posixContext = p.Context(style: p.Style.posix);
+
+    // 1. Split the Windows path into components.
+    final pathComponents = windowsContext.split(path);
+
+    // 2. Remove the first component if it's an empty string.
+    // This handles the initial '\' which Windows treats as a root/separator,
+    // but which results in an empty string at the beginning of the split list.
+    if (pathComponents.isNotEmpty &&
+        pathComponents.first == windowsContext.separator) {
+      pathComponents.first = posixContext.separator;
+    }
+
+    // 3. Join the remaining components using the POSIX style.
+    final normalizedPath = posixContext.joinAll(pathComponents);
 
     return normalizedPath;
   }

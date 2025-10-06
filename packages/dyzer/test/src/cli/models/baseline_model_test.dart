@@ -129,7 +129,8 @@ void main() {
   group('paths', () {
     test('paths should be normalized', () {
       final differentPathTypes = [
-        p.Context(style: p.Style.windows).join('/directory', 'fileWindows.dart'),
+        p.Context(style: p.Style.windows)
+            .join(r'\directory', 'fileWindows.dart'),
         p.Context(style: p.Style.posix).join('/directory', 'filePosix.dart'),
       ];
       final baselineModel = BaselineModel(
