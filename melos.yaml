@@ -4,8 +4,12 @@ sdkPath: .fvm/flutter_sdk
 
 packages:
   - "packages/*"
-  - "packages/dyzer/tools/analyzer_plugin"
  
+command:
+  bootstrap:
+    hooks:
+      post: cd packages/dyzer/tools/analyzer_plugin && fvm dart pub get
+        
 scripts:
   generate:
     run: melos exec -c 1 --depends-on build_runner -- dart run build_runner build --delete-conflicting-outputs
