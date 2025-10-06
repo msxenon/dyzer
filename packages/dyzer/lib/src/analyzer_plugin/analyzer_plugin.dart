@@ -427,7 +427,7 @@ Future<List<String>?> getUpdatedBaselineFiles(
       if (contentHash == null) {
         // Baseline deleted
 
-        return lastContentFiles?.keys.toList();
+        return lastContentFiles?.keys.map(normalize).toList();
       }
       if (contentHash != lastContentHash) {
         final content = BaselineReaderProvider()(rootFolder, force: true);
@@ -437,7 +437,7 @@ Future<List<String>?> getUpdatedBaselineFiles(
           content?.files,
         );
 
-        return result;
+        return result?.map(normalize).toList();
       }
 
       lastContentHash = contentHash;

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:path/path.dart' as p;
 
 import 'lint_file_model.dart';
 
@@ -59,4 +60,27 @@ class BaselineModel with EquatableMixin {
         baselinedIssues,
         baselinedFiles,
       ];
+
+  static String normalizeBaselinePath(String path) {
+    // Convert it into a POSIX path
+    final normalizedPath = p.Context(style: p.Style.posix).joinAll(
+      p.Context(style: p.Style.windows).split(path),
+    );
+
+    return normalizedPath;
+  }
+
+  void putFileIfAbsent(String path, LintFileModel Function() param1) {
+    files.putIfAbsent(normalizeBaselinePath(path), param1);
+  }
+
+  bool containsPath(String filePath) =>
+      files.containsKey(normalizeBaselinePath(filePath));
+
+  LintFileModel? getLintFileModel(String filePath) =>
+      files[normalizeBaselinePath(filePath)];
+
+  void build() {
+    files.removeWhere((_, lintFile) => lintFile.lints.isEmpty);
+  }
 }

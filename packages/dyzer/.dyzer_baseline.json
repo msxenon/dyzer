@@ -1,8 +1,8 @@
 {
-  "createdAt": "2025-08-20T18:07:49.652488",
+  "createdAt": "2025-10-06T14:01:05.151208",
   "baselinedIssues": 46,
   "baselinedFiles": 24,
-  "version": "1.0.0",
+  "version": "1.0.4",
   "files": {
     "/lib/src/analyzer_plugin/analyzer_plugin.dart": {
       "newline-before-return": [
@@ -95,7 +95,7 @@
     },
     "/lib/src/cli/commands/baseline_command.dart": {
       "long-method": [
-        "cff4c592d89abd6a42405801943d0765"
+        "d36e0f78e9f28a628a9c7c5225eaa3b3"
       ],
       "prefer-trailing-comma": [
         "83f9a3ac525ad7504ca5d6a3b17648bb",

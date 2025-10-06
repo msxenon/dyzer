@@ -14,7 +14,7 @@ class BaselineSuppression {
     if (baselineModel == null) {
       return false;
     }
-    final file = baselineModel!.files[_filePathTrimmer(path)];
+    final file = baselineModel!.getLintFileModel(_filePathTrimmer(path));
     final allRules = file?.lints.keys;
     if (allRules == null) {
       return false;
@@ -23,7 +23,8 @@ class BaselineSuppression {
     return allRules.contains(ruleId);
   }
 
-  String _filePathTrimmer(String filePath) => filePath.split(_rootFolder).elementAtOrNull(1) ?? filePath;
+  String _filePathTrimmer(String filePath) =>
+      filePath.split(_rootFolder).elementAtOrNull(1) ?? filePath;
 
   bool isSuppressedAt(
     SourceLocation start,
@@ -43,11 +44,10 @@ class BaselineSuppression {
       indexInFile: indexInFile,
     );
 
-    final files = baselineModel!.files;
-    if (files.containsKey(filePath)) {
-      final fileSuppression = files[filePath]!;
+    if (baselineModel!.containsPath(filePath)) {
+      final fileSuppression = baselineModel!.getLintFileModel(filePath);
 
-      if (fileSuppression.lints.keys.contains(ruleId)) {
+      if (fileSuppression!.lints.keys.contains(ruleId)) {
         final lintDetails = fileSuppression.lints[ruleId]!;
 
         var result = false;

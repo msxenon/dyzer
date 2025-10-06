@@ -71,15 +71,15 @@ class BaselineCommand extends BaseCommand {
       for (final fileReport in lintAnalyzerResult) {
         final content = File(fileReport.path).readAsStringSync();
         final path = fileReport.path.replaceFirst(rootFolder, '');
-        baselineModel.files
-          ..putIfAbsent(
+        baselineModel
+          ..putFileIfAbsent(
             path,
             () => LintFileModel.fromIssues([
               ...fileReport.issues,
               ...fileReport.antiPatternCases,
             ], content),
           )
-          ..removeWhere((_, lintFile) => lintFile.lints.isEmpty);
+          ..build();
       }
       final baselinedFiles = baselineModel.files.length;
       final baselinedIssues = baselineModel.files.values.fold<int>(
