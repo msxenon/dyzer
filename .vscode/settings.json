@@ -1,5 +1,5 @@
 {
-  "dart.flutterSdkPath": ".fvm/versions/3.35.1",
+  "dart.flutterSdkPath": ".fvm/versions/3.35.5",
   "cSpell.words": [
     "Dyzer"
   ],
@@ -7,6 +7,6 @@
   "[dart]": {
     "editor.rulers": [
       80
-    ],
+    ]
   }
 }
