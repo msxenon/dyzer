@@ -1,20 +1,17 @@
 name: dyzer_project
-command:
-  bootstrap:
-    hooks:
-      pre: find . -name "pubspec.lock" -delete
 
 sdkPath: .fvm/flutter_sdk
 
 packages:
   - "packages/*"
+  - "packages/dyzer/tools/analyzer_plugin"
  
 scripts:
   generate:
     run: melos exec -c 1 --depends-on build_runner -- dart run build_runner build --delete-conflicting-outputs
 
   create_baselines:
-    run: melos exec -c 1 -- "dyzer baseline *"
+    run: melos exec -c 1  --depends-on dyzer -- "dyzer baseline *"
 
   reset_analyzer_plugin:
     run: killall dart && rm -rf ~/.dartServer/.plugin_manager
