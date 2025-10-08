@@ -9,6 +9,8 @@ class BaselineModel with EquatableMixin {
   final String version;
   final int baselinedIssues;
   final int baselinedFiles;
+  static final pathContext = p.Context(style: p.Style.posix);
+
   const BaselineModel({
     required this.createdAt,
     required this.baselinedIssues,
@@ -63,7 +65,6 @@ class BaselineModel with EquatableMixin {
 
   static String normalizeBaselinePath(String path) {
     final windowsContext = p.Context(style: p.Style.windows);
-    final posixContext = p.Context(style: p.Style.posix);
 
     // 1. Split the Windows path into components.
     final pathComponents = windowsContext.split(path);
@@ -73,11 +74,11 @@ class BaselineModel with EquatableMixin {
     // but which results in an empty string at the beginning of the split list.
     if (pathComponents.isNotEmpty &&
         pathComponents.first == windowsContext.separator) {
-      pathComponents.first = posixContext.separator;
+      pathComponents.first = pathContext.separator;
     }
 
     // 3. Join the remaining components using the POSIX style.
-    final normalizedPath = posixContext.joinAll(pathComponents);
+    final normalizedPath = pathContext.joinAll(pathComponents);
 
     return normalizedPath;
   }

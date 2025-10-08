@@ -1,5 +1,5 @@
 {
-  "createdAt": "2025-10-06T18:28:19.993339",
+  "createdAt": "2025-10-08T17:05:43.312539",
   "baselinedIssues": 46,
   "baselinedFiles": 24,
   "version": "1.0.4",
@@ -95,7 +95,7 @@
     },
     "/lib/src/cli/commands/baseline_command.dart": {
       "long-method": [
-        "d36e0f78e9f28a628a9c7c5225eaa3b3"
+        "bb0014774a15c77430e47de376973ce3"
       ],
       "prefer-trailing-comma": [
         "83f9a3ac525ad7504ca5d6a3b17648bb",
