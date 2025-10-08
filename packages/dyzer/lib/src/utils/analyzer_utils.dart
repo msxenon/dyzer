@@ -192,4 +192,25 @@ class AnalyzerUtils {
 
     return result;
   }
+
+  Iterable<String> normalizeFoldersWildcards(
+    List<String> folders,
+    String rootFolder,
+  ) {
+    final safeFoldersList = <String>[];
+    if (folders.isEmpty || (folders.length == 1 && folders.contains('.'))) {
+      final dirsList = Directory(rootFolder).listSync().whereType<Directory>();
+      for (final dir in dirsList) {
+        final isValidDirName =
+            !dir.uri.pathSegments.any((segment) => segment.startsWith('.'));
+        if (isValidDirName && FileSystemEntity.isDirectorySync(dir.path)) {
+          safeFoldersList.add(basename(dir.path));
+        }
+      }
+    } else {
+      safeFoldersList.addAll(folders);
+    }
+
+    return safeFoldersList;
+  }
 }

@@ -49,10 +49,11 @@ class BaselineCommand extends BaseCommand {
       final rootFolder = parsedArgs.rootFolder;
 
       baselineModelReader.pause();
-
+      final normalizedFolders =
+          analyzerUtils.normalizeFoldersWildcards(argResults.rest, rootFolder);
       final lintAnalyzerResult =
           await LintAnalyzer(_logger, skipBaseline: true).runCliAnalysis(
-        argResults.rest,
+        normalizedFolders,
         rootFolder,
         config,
         sdkPath: findSdkPath(),
