@@ -8,14 +8,14 @@ packages:
 command:
   bootstrap:
     hooks:
-      post: cd packages/dyzer/tools/analyzer_plugin && fvm dart pub get
+      post: fvm dart pub get --directory packages/dyzer/tools/analyzer_plugin
         
 scripts:
   generate:
     run: melos exec -c 1 --depends-on build_runner -- dart run build_runner build --delete-conflicting-outputs
 
   create_baselines:
-    run: melos exec -c 1  --depends-on dyzer -- "dyzer baseline *"
+    run: melos exec -c 1 -- "dart run dyzer baseline ."
 
   reset_analyzer_plugin:
     run: killall dart && rm -rf ~/.dartServer/.plugin_manager
