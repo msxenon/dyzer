@@ -6,6 +6,9 @@ publish_to: none
 environment:
   sdk: ">=2.14.0 <3.0.0"
 
+dependency_overrides:
+  dyzer: 
+    path: C:\Users\modi\build\dyzer\packages\dyzer
 dependencies:
   dyzer: ^1.0.2
 dev_dependencies:
