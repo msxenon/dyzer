@@ -93,4 +93,66 @@ void main() {
       testOn: 'posix',
     );
   });
+
+  group('isFileWhiteListed', () {
+    test('all dart files should return true', () {
+      expect(
+        const AnalyzerUtils().isFileWhiteListed(
+          'test/resources/file_paths_folder/first_file.dart',
+        ),
+        isTrue,
+      );
+      expect(
+        const AnalyzerUtils().isFileWhiteListed(
+          'test/resources/file_paths_folder/inner_folder/first_inner_file.dart',
+        ),
+        isTrue,
+      );
+      expect(
+        const AnalyzerUtils().isFileWhiteListed(
+          'test/resources/file_paths_folder/second_file.dart',
+        ),
+        isTrue,
+      );
+    });
+
+    test('analysis_options.yaml should return true', () {
+      expect(
+        const AnalyzerUtils().isFileWhiteListed(
+          'analysis_options.yaml',
+        ),
+        isTrue,
+      );
+    });
+
+    test('.dyzer_baseline.json should return true', () {
+      expect(
+        const AnalyzerUtils().isFileWhiteListed(
+          '.dyzer_baseline.json',
+        ),
+        isTrue,
+      );
+    });
+
+    test('should return false for files not to be analyzed', () {
+      expect(
+        const AnalyzerUtils().isFileWhiteListed(
+          'test/resources/file_paths_folder/third_file.h',
+        ),
+        isFalse,
+      );
+      expect(
+        const AnalyzerUtils().isFileWhiteListed(
+          'test/resources/file_paths_folder/inner_folder/second_inner_file.yaml',
+        ),
+        isFalse,
+      );
+      expect(
+        const AnalyzerUtils().isFileWhiteListed(
+          'any.py',
+        ),
+        isFalse,
+      );
+    });
+  });
 }

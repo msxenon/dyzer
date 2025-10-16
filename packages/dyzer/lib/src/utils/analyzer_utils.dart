@@ -1,4 +1,5 @@
 // ignore_for_file: implementation_imports
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:analyzer/dart/analysis/analysis_context.dart';
@@ -9,10 +10,13 @@ import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:analyzer/src/dart/analysis/analysis_context_collection.dart';
 import 'package:analyzer/src/dart/analysis/byte_store.dart';
 import 'package:analyzer/src/dart/analysis/file_byte_store.dart';
+import 'package:crypto/crypto.dart';
 import 'package:file/local.dart';
 import 'package:glob/glob.dart';
 import 'package:path/path.dart';
 
+import '../analyzer_plugin/analyzer_plugin.dart';
+import '../cli/models/lint_file_model.dart';
 import 'exclude_utils.dart';
 
 class AnalyzerUtils {
@@ -130,5 +134,83 @@ class AnalyzerUtils {
     }
 
     return resourceProvider;
+  }
+
+  bool isFileWhiteListed(String path) {
+    final fileName = basename(path);
+
+    for (final glob in AnalyzerPlugin.kfileGlobsToAnalyze) {
+      if (glob.contains('*')) {
+        final regex = RegExp(
+          // ignore: prefer_interpolation_to_compose_strings
+          '^' + glob.replaceAll('.', r'\.').replaceAll('*', '.*') + r'$',
+        );
+        if (regex.hasMatch(fileName)) {
+          return true;
+        }
+      } else {
+        if (glob == fileName) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  String hashString(String input) {
+    final bytes = utf8.encode(input);
+    final hash = md5.convert(bytes);
+
+    return hash.toString();
+  }
+
+  List<String>? filesToReanalyze(
+    Map<String, LintFileModel>? files,
+    Map<String, LintFileModel>? files2,
+  ) {
+    if (files == null && files2 == null) {
+      return null;
+    }
+    if (files == null) {
+      return files2!.keys.toList();
+    }
+    if (files2 == null) {
+      return files.keys.toList();
+    }
+    final result = <String>[];
+
+    for (final entry in files.entries) {
+      final key = entry.key;
+      final value = entry.value;
+
+      final value2 = files2[key];
+      if (value2 == null || value != value2) {
+        result.add(key);
+      }
+    }
+
+    return result;
+  }
+
+  Iterable<String> normalizeFoldersWildcards(
+    List<String> folders,
+    String rootFolder,
+  ) {
+    final safeFoldersList = <String>[];
+    if (folders.isEmpty || (folders.length == 1 && folders.contains('.'))) {
+      final dirsList = Directory(rootFolder).listSync().whereType<Directory>();
+      for (final dir in dirsList) {
+        final isValidDirName =
+            !dir.uri.pathSegments.any((segment) => segment.startsWith('.'));
+        if (isValidDirName && FileSystemEntity.isDirectorySync(dir.path)) {
+          safeFoldersList.add(basename(dir.path));
+        }
+      }
+    } else {
+      safeFoldersList.addAll(folders);
+    }
+
+    return safeFoldersList;
   }
 }

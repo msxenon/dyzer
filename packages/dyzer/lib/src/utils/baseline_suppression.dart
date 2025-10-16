@@ -1,3 +1,4 @@
+import 'package:path/path.dart' as p;
 import 'package:source_span/source_span.dart';
 
 import '../cli/models/baseline_model.dart';
@@ -5,16 +6,22 @@ import '../cli/models/ignored_issue_model.dart';
 import '../providers/baseline_model_reader.dart';
 
 class BaselineSuppression {
+  final String _rootNormalizedRootFolder;
   final String _rootFolder;
   final String content;
   BaselineModel? get baselineModel => BaselineReaderProvider()(_rootFolder);
-  BaselineSuppression(this._rootFolder, this.content);
+
+  BaselineSuppression(String rootFolder, this.content)
+      : _rootNormalizedRootFolder =
+            BaselineModel.pathContext.joinAll(p.split(rootFolder)),
+        _rootFolder = rootFolder;
 
   bool isSuppressed(String ruleId, String path) {
     if (baselineModel == null) {
       return false;
     }
-    final file = baselineModel!.files[_filePathTrimmer(path)];
+    final file = baselineModel!
+        .getLintFileModel(fullToBaselineFriendlyPath(Uri.parse(path)));
     final allRules = file?.lints.keys;
     if (allRules == null) {
       return false;
@@ -22,8 +29,6 @@ class BaselineSuppression {
 
     return allRules.contains(ruleId);
   }
-
-  String _filePathTrimmer(String filePath) => filePath.split(_rootFolder).elementAtOrNull(1) ?? filePath;
 
   bool isSuppressedAt(
     SourceLocation start,
@@ -34,7 +39,11 @@ class BaselineSuppression {
     if (baselineModel == null) {
       return false;
     }
-    final filePath = _filePathTrimmer(start.sourceUrl.toString());
+    final pathUri = start.sourceUrl;
+    if (pathUri == null) {
+      return false;
+    }
+    final filePath = fullToBaselineFriendlyPath(pathUri);
 
     final fromIssueLintDetails = IgnoredIssueModel.fromIssue(
       start: start,
@@ -43,11 +52,10 @@ class BaselineSuppression {
       indexInFile: indexInFile,
     );
 
-    final files = baselineModel!.files;
-    if (files.containsKey(filePath)) {
-      final fileSuppression = files[filePath]!;
+    if (baselineModel!.containsPath(filePath)) {
+      final fileSuppression = baselineModel!.getLintFileModel(filePath);
 
-      if (fileSuppression.lints.keys.contains(ruleId)) {
+      if (fileSuppression!.lints.keys.contains(ruleId)) {
         final lintDetails = fileSuppression.lints[ruleId]!;
 
         var result = false;
@@ -63,5 +71,24 @@ class BaselineSuppression {
     }
 
     return false;
+  }
+
+  String fullToBaselineFriendlyPath(Uri filePath) {
+    // Normalize both paths to handle separators
+    final normalizedFilePath = p.normalize(filePath.toFilePath());
+    final normalizedRoot = p.normalize(_rootNormalizedRootFolder);
+
+    // Get the relative path
+    final relativePath = p.relative(normalizedFilePath, from: normalizedRoot);
+
+    // Ensure POSIX-style slashes
+    var expectedTrimmedPath = p.posix.joinAll(p.split(relativePath));
+    final posixSeparator = p.posix.separator;
+    // Add leading slash if missing
+    if (!expectedTrimmedPath.startsWith(posixSeparator)) {
+      expectedTrimmedPath = '$posixSeparator$expectedTrimmedPath';
+    }
+
+    return expectedTrimmedPath;
   }
 }

@@ -1,8 +1,8 @@
 {
-  "createdAt": "2025-08-20T17:51:57.657647",
+  "createdAt": "2025-10-06T14:11:17.230018",
   "baselinedIssues": 2,
   "baselinedFiles": 1,
-  "version": "1.0.0",
+  "version": "1.0.4",
   "files": {
     "/lib/main.dart": {
       "avoid-unused-parameters": [

@@ -1,14 +1,14 @@
 name: dyzer_plugin_loader
 description: This pubspec determines the version of the analyzer plugin to load.
-version: 1.0.3
+version: 1.0.4
 publish_to: none
 
 environment:
   sdk: ">=2.14.0 <3.0.0"
 
-# dependency_overrides: 
-#   dyzer:
-#     path: ../../
+dependency_overrides:
+  dyzer: 
+    path: C:\Users\modi\build\dyzer\packages\dyzer
 dependencies:
   dyzer: ^1.0.2
 dev_dependencies:

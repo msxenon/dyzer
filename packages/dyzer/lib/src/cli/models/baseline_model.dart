@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:path/path.dart' as p;
 
 import 'lint_file_model.dart';
 
@@ -8,6 +9,8 @@ class BaselineModel with EquatableMixin {
   final String version;
   final int baselinedIssues;
   final int baselinedFiles;
+  static final pathContext = p.Context(style: p.Style.posix);
+
   const BaselineModel({
     required this.createdAt,
     required this.baselinedIssues,
@@ -59,4 +62,38 @@ class BaselineModel with EquatableMixin {
         baselinedIssues,
         baselinedFiles,
       ];
+
+  static String normalizeBaselinePath(String path) {
+    final windowsContext = p.Context(style: p.Style.windows);
+
+    // 1. Split the Windows path into components.
+    final pathComponents = windowsContext.split(path);
+
+    // 2. Remove the first component if it's an empty string.
+    // This handles the initial '\' which Windows treats as a root/separator,
+    // but which results in an empty string at the beginning of the split list.
+    if (pathComponents.isNotEmpty &&
+        pathComponents.first == windowsContext.separator) {
+      pathComponents.first = pathContext.separator;
+    }
+
+    // 3. Join the remaining components using the POSIX style.
+    final normalizedPath = pathContext.joinAll(pathComponents);
+
+    return normalizedPath;
+  }
+
+  void putFileIfAbsent(String path, LintFileModel Function() param1) {
+    files.putIfAbsent(normalizeBaselinePath(path), param1);
+  }
+
+  bool containsPath(String filePath) =>
+      files.containsKey(normalizeBaselinePath(filePath));
+
+  LintFileModel? getLintFileModel(String filePath) =>
+      files[normalizeBaselinePath(filePath)];
+
+  void build() {
+    files.removeWhere((_, lintFile) => lintFile.lints.isEmpty);
+  }
 }

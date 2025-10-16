@@ -13,6 +13,7 @@ import 'package:analyzer_plugin/protocol/protocol_generated.dart' as plugin;
 import 'package:analyzer_plugin/protocol/protocol_generated.dart';
 import 'package:collection/collection.dart';
 import 'package:path/path.dart';
+import 'package:synchronized/synchronized.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../cli_runner.dart';
@@ -24,20 +25,25 @@ import '../analyzers/lint_analyzer/metrics/metrics_list/number_of_parameters/num
 import '../analyzers/lint_analyzer/metrics/metrics_list/source_lines_of_code/source_lines_of_code_metric.dart';
 import '../cli/commands/baseline_command.dart';
 import '../providers/baseline_model_reader.dart';
+import '../utils/analyzer_utils.dart';
 import '../version.dart';
 import 'analyzer_plugin_utils.dart';
 
 class AnalyzerPlugin extends ServerPlugin {
   final _configs = <String, LintAnalysisConfig>{};
-
+  static const kfileGlobsToAnalyze = [
+    '*.dart',
+    'analysis_options.yaml',
+    BaselineCommand.baselineFileName,
+  ];
   AnalysisContextCollectionImpl? _contextCollection;
+  final lock = Lock();
 
   @override
   String get contactInfo => 'https://github.com/msxenon/dyzer/issues';
 
   @override
-  List<String> get fileGlobsToAnalyze =>
-      const ['*.dart', '*.yaml', BaselineCommand.baselineFileName];
+  List<String> get fileGlobsToAnalyze => kfileGlobsToAnalyze;
 
   @override
   String get name => 'Dyzer $packageVersion';
@@ -45,7 +51,7 @@ class AnalyzerPlugin extends ServerPlugin {
   @override
   String get version => packageVersion;
 
-  late final ByteStore _byteStore = createByteStore();
+  ByteStore? _byteStore;
   String? _sdkPath;
 
   AnalyzerPlugin({
@@ -109,6 +115,9 @@ class AnalyzerPlugin extends ServerPlugin {
     required AnalysisContext analysisContext,
     required String path,
   }) async {
+    if (!const AnalyzerUtils().isFileWhiteListed(path)) {
+      return;
+    }
     final isAnalyzed = analysisContext.contextRoot.isAnalyzed(path);
     if (!isAnalyzed) {
       return;
@@ -257,7 +266,7 @@ class AnalyzerPlugin extends ServerPlugin {
     var contextCollection = AnalysisContextCollectionImpl(
       resourceProvider: resourceProvider,
       includedPaths: includedPaths,
-      byteStore: _byteStore,
+      byteStore: _getByteStore(),
       sdkPath: _sdkPath,
       fileContentCache: FileContentCache(resourceProvider),
     );
@@ -270,46 +279,53 @@ class AnalyzerPlugin extends ServerPlugin {
 
   @override
   Future<void> contentChanged(List<String> paths) async {
-    var forceUseFinalPaths = false;
-    final contextCollection = _contextCollection;
-    if (contextCollection != null) {
-      final baselinePath = paths.firstWhereOrNull(
-          (e) => e.endsWith(BaselineCommand.baselineFileName));
-      if (baselinePath != null && paths.length == 1) {
-        final rootFolder = dirname(baselinePath);
-        final updatedBaselineFiles = await getUpdatedBaselineFiles(rootFolder);
-        if (updatedBaselineFiles == null) {
-          return;
+    await lock.synchronized(() async {
+      var forceUseFinalPaths = false;
+      final contextCollection = _contextCollection;
+      if (contextCollection != null) {
+        final baselinePath = paths.firstWhereOrNull(
+            (e) => e.endsWith(BaselineCommand.baselineFileName));
+        if (baselinePath != null && paths.length == 1) {
+          final rootFolder = dirname(baselinePath);
+          Logger(tag: 'contentChanged').info(
+            '',
+          );
+          final updatedBaselineFiles =
+              await getUpdatedBaselineFiles(rootFolder);
+          Logger(tag: 'contentChanged').info(
+            'Baseline changed, re-analyzing files: $updatedBaselineFiles',
+          );
+          if (updatedBaselineFiles != null) {
+            for (final baselineFilePath in updatedBaselineFiles) {
+              final fullBaselineFilePath =
+                  join(rootFolder, relative(baselineFilePath));
+              paths.add(fullBaselineFilePath);
+            }
+            forceUseFinalPaths = true;
+          }
         }
-
-        for (final baselineFilePath in updatedBaselineFiles) {
-          final fullBaselineFilePath =
-              join(rootFolder, relative(baselineFilePath));
-          paths.add(fullBaselineFilePath);
-        }
-        forceUseFinalPaths = true;
-      }
-      await _forAnalysisContexts(contextCollection, (analysisContext) async {
-        if (forceUseFinalPaths) {
-          final analyzedFiles = analysisContext.contextRoot.analyzedFiles();
-          if (paths.any(analyzedFiles.contains)) {
+        await _forAnalysisContexts(contextCollection, (analysisContext) async {
+          if (forceUseFinalPaths) {
+            final analyzedFiles = analysisContext.contextRoot.analyzedFiles();
+            if (paths.any(analyzedFiles.contains)) {
+              paths.forEach(analysisContext.changeFile);
+              await analysisContext.applyPendingFileChanges();
+              await handleAffectedFiles(
+                analysisContext: analysisContext,
+                paths: paths,
+              );
+            }
+          } else {
             paths.forEach(analysisContext.changeFile);
-            await analysisContext.applyPendingFileChanges();
+            var affected = await analysisContext.applyPendingFileChanges();
             await handleAffectedFiles(
               analysisContext: analysisContext,
-              paths: paths,
+              paths: affected,
             );
           }
-        } else {
-          paths.forEach(analysisContext.changeFile);
-          var affected = await analysisContext.applyPendingFileChanges();
-          await handleAffectedFiles(
-            analysisContext: analysisContext,
-            paths: affected,
-          );
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
   @override
@@ -373,34 +389,67 @@ class AnalyzerPlugin extends ServerPlugin {
     return super.handlePluginVersionCheck(parameters);
   }
 
-  // After changing the baseline, we need to get the updated files to analyze, doing directly will get the last saved
-  // baseline, not the updated one.
-  Future<List<String>?> getUpdatedBaselineFiles(
-    String rootFolder, {
-    int retries = 10,
-    Duration interval = const Duration(milliseconds: 300),
-  }) async {
+  @override
+  Future<PluginShutdownResult> handlePluginShutdown(
+    PluginShutdownParams parameters,
+  ) async {
+    _configs.clear();
+    await _contextCollection?.dispose();
+    _contextCollection = null;
+    _byteStore = null;
+    BaselineReaderProvider().clearInstances();
+
+    return super.handlePluginShutdown(parameters);
+  }
+
+  ByteStore _getByteStore() {
+    _byteStore ??= createByteStore();
+
+    return _byteStore!;
+  }
+}
+
+// After changing the baseline, we need to get the updated files to analyze, doing directly will get the last saved
+// baseline, not the updated one.
+Future<List<String>?> getUpdatedBaselineFiles(
+  String rootFolder, {
+  int retries = 10,
+  Duration interval = const Duration(milliseconds: 200),
+}) async {
+  try {
     var lastContent = BaselineReaderProvider()(rootFolder);
-    final lastContentFiles = lastContent?.files.keys.toList();
+    var lastContentHash = BaselineReaderProvider().getBaselineHash(rootFolder);
+    final lastContentFiles = lastContent?.files;
+
     for (var i = 0; i < retries; i++) {
-      final content = BaselineReaderProvider()(rootFolder, force: true);
-      if (content == null) {
+      final contentHash =
+          BaselineReaderProvider().getBaselineHash(rootFolder, force: true);
+      if (contentHash == null) {
         // Baseline deleted
-        return lastContentFiles;
-      }
-      if (content != lastContent) {
-        // Updated baseline found
-        BaselineReaderProvider().assignInstance(content, rootFolder);
 
-        return <String>{...content.files.keys, ...lastContentFiles ?? []}
-            .nonNulls
-            .toList();
+        return lastContentFiles?.keys.map(normalize).toList();
       }
-      lastContent = content;
+      if (contentHash != lastContentHash) {
+        final content = BaselineReaderProvider()(rootFolder, force: true);
 
+        final result = const AnalyzerUtils().filesToReanalyze(
+          lastContent?.files,
+          content?.files,
+        );
+
+        return result?.map(normalize).toList();
+      }
+
+      lastContentHash = contentHash;
+      if (i == retries - 1) {
+        continue;
+      }
       await Future<void>.delayed(interval);
     }
-
-    return null;
+    // ignore: avoid_catches_without_on_clauses
+  } catch (e, s) {
+    Logger(tag: '$AnalyzerPlugin').e(e, s);
   }
+
+  return null;
 }
